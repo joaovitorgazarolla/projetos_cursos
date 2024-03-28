@@ -32,6 +32,14 @@ for(let i = 0 ; i < boxes.length; i++){
     
             if(player1 == player2){
                 player1++;
+
+                if(secondPlay == 'ai-player'){
+                    setTimeout(function(){
+                        computerPlay();
+
+                    },100)
+                    player2++
+                }
             }else{
                 player2++;
             }
@@ -39,15 +47,26 @@ for(let i = 0 ; i < boxes.length; i++){
         }
         checkWinCondition();
     });
-    // Verifica quem venceu
+
 
     // evento para saber quem vai jogar, 2 player ou IA
-    
-    for(i = 0; i < buttons.length; i++){
-        secondPlay = this.getAttribute("id");
-        
+    for(let i = 0; i < buttons.length; i++){
+        buttons[i].addEventListener("click", function(){
+            secondPlay = this.getAttribute("id");
+            
+            for(let j = 0; j < buttons.length;j++){
+                buttons[j].style.display = 'none';
+            }
+
+            setTimeout(function(){
+                let container = document.querySelector('#container');
+                container.classList.remove("hide");
+            })
+
+
+        })
     }
-    
+
 }
 function checkElemento(player1, player2){
     if(player1 == player2){
@@ -74,7 +93,9 @@ function checkWinCondition(){
 
     // Horizontal
 
+
     if(b1.childNodes.length > 0 && b2.childNodes.length > 0 && b3.childNodes.length > 0){
+
         let b1child = b1.childNodes[0].className;
         let b2child = b2.childNodes[0].className;
         let b3child = b3.childNodes[0].className;
@@ -257,12 +278,37 @@ function checkWinCondition(){
         for(let i = 0; i < boxesToRemove.length; i++){
             boxesToRemove[i].parentNode.removeChild(boxesToRemove[i]);
         }
-
-
-
     }
 
+}
 
+// Executa a logica da jogada do CPU
+
+function computerPlay(){
+    let cloneO = o.cloneNode(true);
+    counter = 0;
+    filled = 0;
+
+    for(let i = 0; i < boxes.length; i++){
+        let randomNumber = Math.floor(Math.random() * 5);
+
+        // Somente preencher se o filho estiver vazio
+        if(boxes[i].childNodes[0] == undefined){
+            if(randomNumber <= 1){
+
+                boxes[i].appendChild(cloneO);                  
+                counter++;
+                break;
+            // Verifica quantas estão preenchidas
+            }else{
+                filled ++;
+            }
+        }
+
+    }
+    if(counter == 0 && filled < 9){
+        computerPlay();
+    }
 
 }
     
